@@ -1,26 +1,30 @@
 version: '3'
 
-services :
-  #Base de données
-  mongo_db:
+services:
+  # Base de données
+  mongo:
     container_name: db_container
     image: mongo:latest
-    restart: always
+    ports:
+     - 27017:27017
     volumes:
       - mongo_db:/data/db
 
-  #Node API
-  api:
-    build: .
+  # Node
+  node:
+    container_name: node_container
+    image: node:latest
+    working_dir: /mnt/d/MDS/2023-workshop-1/
+    command:
+      - /bin/sh
+      - -c
+      - npm install & npm start
     ports:
       - 3000:3000
-    environment:
-      PORT: 3000
-      MONGODB_URI: mongodb://mongo_db:27017
-      DB_NAME: my_db
-      NAME: AliGattor
-    depends_on:
-      - mongo_db
-  
+    volumes:
+      - ./src:/mnt/d/MDS/2023-workshop-1
+    links:
+      - mongo
+
 volumes:
-  mongo_db: {}
+  mongo_db:
