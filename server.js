@@ -1,11 +1,12 @@
+require('dotenv').config();
 const express = require('express');
+const { createMeeting } = require('./controllers/eventController');
 const app = express();
-const PORT = 3000;
 
-app.get('/', (req, res) => {
-  res.send('Bonjour Monde!');
-});
+app.use(express.json());
 
-app.listen(PORT, () => {
-  console.log(`Serveur fonctionnant sur http://localhost:${PORT}`);
+app.post('/create-meeting', createMeeting);
+
+app.listen(3000, () => {
+    console.log('Serveur en écoute sur le port 3000');
 });
