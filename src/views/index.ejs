@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.7/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Personnalisation des couleurs */
+        :root {
+            --bg-color: #ffffff;
+            --primary-color: #b89a52;
+            --accent-color: #79151d;
+            --text-color: #000000;
+            --transparent-bg: rgba(184, 154, 82, 0.2);
+        }
+        body {
+            background-color: var(--bg-color);
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+        .btn-accent {
+            background-color: var(--accent-color);
+            color: #fff;
+        }
+        .text-custom {
+            color: var(--text-color);
+        }
+        .table-bg {
+            background-color: var(--primary-color);
+        }
+        .table-header {
+            color: #fff;
+        }
+        /* Style clair pour les informations */
+        .info-box {
+            background-color: #f0f0f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        /* Style transparent pour les lignes de tableau */
+        .table-row-bg {
+            background-color: var(--transparent-bg);
+        }
+    </style>
+    <title>BeGood</title>
+</head>
+<body>
+    <div class="container mx-auto p-4">
+        <div class="info-box">
+            <h1 class="text-3xl font-bold text-custom mb-4">Liste des Réunions</h1>
+            <form action="/upload" method="post" enctype="multipart/form-data" class="mb-4">
+                <input type="file" name="csvFile" class="border border-gray-300 py-2 px-4 rounded-lg">
+                <button type="submit" class="btn-primary py-2 px-4 rounded-lg ml-2">Téléverser</button>
+            </form>
+            <form action="/download" method="get" class="mb-4">
+                <button type="submit" class="btn-accent py-2 px-4 rounded-lg">Exporter</button>
+            </form>
+        </div>
+        <table class="w-full border-collapse border border-gray-300 table-bg">
+            <thead>
+                <tr>
+                    <th class="text-custom table-header border border-gray-300 px-4 py-2">Titre</th>
+                    <th class="text-custom table-header border border-gray-300 px-4 py-2">Organisateur</th>
+                    <th class="text-custom table-header border border-gray-300 px-4 py-2">Invités</th>
+                    <th class="text-custom table-header border border-gray-300 px-4 py-2">Date de début</th>
+                    <th class="text-custom table-header border border-gray-300 px-4 py-2">Date de fin</th>
+                    <th class="text-custom table-header border border-gray-300 px-4 py-2">Lien du meeting</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% meetings.forEach((meeting, index) => { %>
+                <tr class="<%= index % 2 === 0 ? 'table-row-bg' : '' %>">
+                    <td class="border border-gray-300 px-4 py-2"><%= meeting.title %></td>
+                    <td class="border border-gray-300 px-4 py-2"><%= meeting.organizes %></td>
+                    <td class="border border-gray-300 px-4 py-2"><%= meeting.guests %></td>
+                    <td class="border border-gray-300 px-4 py-2">
+                        <% const meetingStartDate = new Date(meeting.start_date); %>
+                        <%= meetingStartDate.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+                    </td>
+                    <td class="border border-gray-300 px-4 py-2">
+                        <% const meetingEndDate = new Date(meeting.end_date); %>
+                        <%= meetingEndDate.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+                    </td>
+                    <% if(meeting.link){ %>
+                        <td class="border border-gray-300 px-4 py-2"><a href='<%= meeting.link %>' class="text-blue-500 underline">Lien du meeting</a></td>
+                    <% } else{ %>  
+                        <td class="border border-gray-300 px-4 py-2"></td>
+                    <% } %>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
