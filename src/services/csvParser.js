@@ -1,4 +1,4 @@
-function parse() { 
+function parse(csv) { 
     const mongoose = require('mongoose');
     const Meeting = require('../models/meetingSchema.js');
     const fs = require('fs');
@@ -13,7 +13,7 @@ function parse() {
         console.log('Connecté à la base de données MongoDB');
     });
 
-    csv = fs.readFileSync("./services/data.csv");
+    // csv = fs.readFileSync("./services/data.csv");
 
     csv = csv.toString().replace(/\r/g, '');
     const array = csv.toString().split("\n");
@@ -74,7 +74,7 @@ function parse() {
     }
     
 
-    return "Infos ajoutés";
+    return array;
     
 }
 
