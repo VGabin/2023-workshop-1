@@ -26,8 +26,8 @@ function parse(csv) {
     for (let row = 1; row < array.length; row++) {
         const meetingData = array[row].split(";");
 
-        if (meetingData[2] && meetingData[2].includes("|")) {
-            meetingData[2]= meetingData[2].split("|");
+        if (meetingData[2] && meetingData[2].includes(",")) {
+            meetingData[2]= meetingData[2].split(",");
         }
         else {
             meetingData[2]= [meetingData[2]];
@@ -49,6 +49,7 @@ function parse(csv) {
                 if (existingMeeting) {
                     console.log('La réunion existe déjà dans la base de données, ne l\'ajoutez pas à nouveau :', existingMeeting);
                 } else {
+                    let lien = callAPI(meetingData);
                     // L'objet n'existe pas, vous pouvez l'ajouter à la base de données
                     let meetingObject = new Meeting({
                         'title': meetingData[0],
