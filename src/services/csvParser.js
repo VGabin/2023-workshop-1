@@ -1,7 +1,6 @@
 function parse(csv) { 
     const mongoose = require('mongoose');
     const Meeting = require('../models/meetingSchema.js');
-    const fs = require('fs');
 
     // Connexion à la base de données MongoDB (remplacez l'URL par votre propre URL)
     mongoose.connect('mongodb://mongo:27017/docker-db', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -18,9 +17,9 @@ function parse(csv) {
     csv = csv.toString().replace(/\r/g, '');
     const array = csv.toString().split("\n");
 
-    let results = [];
+    // let results = [];
 
-    let headers = array[0].split(";")
+    // let headers = array[0].split(";")
 
     array.pop([""])
 
@@ -34,10 +33,6 @@ function parse(csv) {
             meetingData[2]= [meetingData[2]];
         }
 
-        console.log("=========================================");
-        console.log(meetingData);
-        console.log("=========================================");
-
         // Construire un objet de recherche basé sur les propriétés que vous voulez vérifier
         const searchCriteria = {
             'title': meetingData[0],
@@ -45,6 +40,7 @@ function parse(csv) {
             'guests': meetingData[2],
             'start_date': meetingData[3],
             'end_date': meetingData[4],
+            'link': meetingData[5],
         };
     
         // Utilisez la méthode findOne() qui renvoie une promesse
@@ -60,6 +56,7 @@ function parse(csv) {
                         'guests': meetingData[2],
                         'start_date': meetingData[3],
                         'end_date': meetingData[4],
+                        'link': meetingData[5],
                     });
     
                     // Sauvegarder l'objet de réunion dans la base de données

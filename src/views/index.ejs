@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Uploader un fichier</title>
+</head>
+<body>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="csvFile"> <!-- Assurez-vous que le nom du champ est "csvFile" -->
+        <input type="submit" value="Téléverser">
+    </form>
+    <h1>Liste des Réunions</h1>
+    <form action="/download" method="get">
+        <input type="submit" value="Exporter">
+    </form>
+    <table>
+        <tr>
+            <th>Titre</th>
+            <th>Organisateur</th>
+            <th>Invités</th>
+            <th>Date de début</th>
+            <th>Date de fin</th>
+            <th>Lien du meeting</th>
+        </tr>
+        <% meetings.forEach(meeting => { %>
+        <tr>
+            <td><%= meeting.title %></td>
+            <td><%= meeting.organizes %></td>
+            <td><%= meeting.guests %></td>
+            <td>
+                <% const meetingStartDate = new Date(meeting.start_date); %>
+                <%= meetingStartDate.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+            </td>
+            <td>
+                <% const meetingEndDate = new Date(meeting.end_date); %>
+                <%= meetingEndDate.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+            </td>
+            <% if(meeting.link){ %>
+                <td><a href='<%= meeting.link %>'>Lien du meeting</a></td>
+              <% } else{ %>  
+                <td></td>
+             <% } %>
+        </tr>
+        <% }); %>
+    </table> 
+</body>
+</html>
