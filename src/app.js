@@ -8,8 +8,6 @@ app.use(express.json());
 
 app.post('/create-meeting', createMeeting);
 
-
-console.log(process.env.GRAPH_API_TOKEN); 
 console.log(csvParse.parse());
 
 app.listen(3000, () => {
