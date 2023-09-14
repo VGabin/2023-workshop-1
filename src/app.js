@@ -1,5 +1,4 @@
 require('dotenv').config();
-const csvParse = require('./services/csvParser.js');
 const express = require('express');
 const { createMeeting } = require('./controllers/eventController');
 const app = express();

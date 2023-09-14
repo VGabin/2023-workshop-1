@@ -1,6 +1,8 @@
 const axios = require('axios');
 const { createEvent } = require('../models/eventModel');
 
+
+
 module.exports.createMeeting = async (req, res) => {
     try {
         const token = process.env.GRAPH_API_TOKEN;
@@ -25,6 +27,7 @@ module.exports.createMeeting = async (req, res) => {
         );
 
         res.json(response.data);
+    
 
     } catch (error) {
         res.status(500).send(error.message);
