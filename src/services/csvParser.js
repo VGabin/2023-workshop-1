@@ -1,6 +1,7 @@
 function parse(csv) { 
     const mongoose = require('mongoose');
     const Meeting = require('../models/meetingSchema.js');
+    const addMeeting = require('./addMeeting');
 
     // Connexion à la base de données MongoDB (remplacez l'URL par votre propre URL)
     mongoose.connect('mongodb://mongo:27017/docker-db', { useNewUrlParser: true, useUnifiedTopology: true });
@@ -49,7 +50,9 @@ function parse(csv) {
                 if (existingMeeting) {
                     console.log('La réunion existe déjà dans la base de données, ne l\'ajoutez pas à nouveau :', existingMeeting);
                 } else {
-                    let lien = callAPI(meetingData);
+                    let lien = addMeeting.createMeeting(meetingData);
+
+                    console.log(lien);
                     // L'objet n'existe pas, vous pouvez l'ajouter à la base de données
                     let meetingObject = new Meeting({
                         'title': meetingData[0],
