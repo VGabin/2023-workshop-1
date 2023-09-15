@@ -7,6 +7,7 @@ const meetingSchema = mongoose.Schema({
     start_date: { type: String, required: true },
     end_date: { type: String, required: true },
     link: { type: String, required: false },
-})
+});
+
 
 module.exports = mongoose.model('Meetings', meetingSchema);

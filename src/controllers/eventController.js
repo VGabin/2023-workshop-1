@@ -1,26 +1,21 @@
 const axios = require('axios');
 const EventModel = require('../models/meetingSchema');
 
-
-module.exports.createMeeting = async (req, res) => {
+async function createMeeting(req, res, body) {
     try {
         const token = process.env.GRAPH_API_TOKEN;
-        const { title, organizes, guests, start_date, end_date } = req.body;
+        const inputData = body || req.body;
+        const { title, organizes, guests, start_date, end_date } = inputData;
 
         if (!title || !organizes || !guests || !start_date || !end_date) {
             return res.status(400).send('Paramètres manquants');
         }
 
-        const newEvent = new EventModel({ title, organizes, guests, start_date, end_date });
-        await newEvent.save();
-
-        const Guests = guests.map(guest => ({
-            emailAddress: {
-                address: guest.email,  
-                name: guest.name || ''  
-            },
-            type: "required"
-        }));
+         const Guests = guests.map(guest => ({
+        emailAddress: {
+            address: guest.email
+        }
+    }));
 
         const event = {
             subject: title,
@@ -39,7 +34,7 @@ module.exports.createMeeting = async (req, res) => {
             location: {
                 displayName: "",  
             },
-        
+            attendees: Guests, 
         };
 
         const response = await axios.post(
@@ -53,20 +48,26 @@ module.exports.createMeeting = async (req, res) => {
                 }
             }
         );
-        const teamsLink = response.data.joinWebUrl;
+       const simplifiedGuests = guests.map(guest => guest.email);
 
 
-      res.json({
-        data: response.data,
-      teamsLink: teamsLink
-});
 
-    
-
-        res.json(response.data);
+        const newEvent = new EventModel({ title, organizes, start_date, end_date, guests: simplifiedGuests, link: response.data.webLink });
+        await newEvent.save();
+        
+        if(res) {
+            res.json(response.data);
+        } else {
+            return response.data;
+        }
     } catch (error) {
         console.error('Erreur:', error.response ? error.response.data : error.message);
-        res.status(500).send(error.response ? error.response.data : error.message);
+        if(res) {
+            res.status(500).send(error.response ? error.response.data : error.message);
+        } else {
+            throw error;
+        }
     }
-};
+}
 
+module.exports = { createMeeting };
