@@ -11,11 +11,21 @@ async function createMeeting(req, res, body) {
             return res.status(400).send('Paramètres manquants');
         }
 
-         const Guests = guests.map(guest => ({
-        emailAddress: {
-            address: guest.email
+        const existingEvent = await EventModel.findOne({ title, organizes, start_date, end_date });
+        if (existingEvent) {
+            console.log('Événement déjà existant, pas de création d\'un nouvel événement');
+            if(res) {
+                return res.status(409).json({ message: 'Événement déjà existant' });
+            } else {
+                return { message: 'Événement déjà existant' };
+            }
         }
-    }));
+
+        const Guests = guests.map(guest => ({
+            emailAddress: {
+                address: guest.email
+            }
+        }));
 
         const event = {
             subject: title,
@@ -50,9 +60,8 @@ async function createMeeting(req, res, body) {
                 }
             }
         );
-       const simplifiedGuests = guests.map(guest => guest.email);
 
-
+        const simplifiedGuests = guests.map(guest => guest.email);
 
         const newEvent = new EventModel({ title, organizes, start_date, end_date, guests: simplifiedGuests, link: response.data.webLink });
         await newEvent.save();
