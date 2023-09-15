@@ -34,6 +34,8 @@ async function createMeeting(req, res, body) {
             location: {
                 displayName: "",  
             },
+            isOnlineMeeting: true, 
+            onlineMeetingProvider: "teamsForBusiness",  
             attendees: Guests, 
         };
 

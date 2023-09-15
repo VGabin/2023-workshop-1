@@ -7,7 +7,7 @@ const meetingSchema = mongoose.Schema({
     start_date: { type: String, required: true },
     end_date: { type: String, required: true },
     link: { type: String, required: false },
+    isOnlineMeeting: { type: Boolean, required: true, default: true },
 });
-
 
 module.exports = mongoose.model('Meetings', meetingSchema);
